@@ -9,14 +9,16 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-boost';
+import { BrowserRouter } from 'react-router-dom';
+
+import { AUTH_TOKEN } from './constants';
 
 const httpLink = createHttpLink({
     uri: 'http://localhost:4000',
 });
 
 const authLink = new ApolloLink((operation, forward) => {
-    const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjazFsb3BiZDNtNTlvMGIwOXRsY3BzN3VmIiwiaWF0IjoxNTcwOTM1NzU2fQ.WlCxRAL0ykbrM-Kg5VWoLp0PsUxabQjY2Tv1dMPXc0s';
+    const token = localStorage.getItem(AUTH_TOKEN);
 
     operation.setContext({
         headers: {
@@ -33,9 +35,11 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-    <ApolloProvider client={client}>
-        <App />
-    </ApolloProvider>,
+    <BrowserRouter>
+        <ApolloProvider client={client}>
+            <App />
+        </ApolloProvider>
+    </BrowserRouter>,
     document.getElementById('root')
 );
 

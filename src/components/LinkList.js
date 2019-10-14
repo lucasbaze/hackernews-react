@@ -12,6 +12,16 @@ const LinkList = () => {
                     url
                     description
                     createdAt
+                    postedBy {
+                        id
+                        name
+                    }
+                    votes {
+                        id
+                        user {
+                            id
+                        }
+                    }
                 }
             }
         }
@@ -22,10 +32,26 @@ const LinkList = () => {
     if (loading) return <div>Fetching...</div>;
     if (error) return <div>Error: ${error.message}</div>;
 
+    console.log(data);
+
+    const _updateCacheAfterVote = (store, createdVote, linkId) => {
+        const data = store.readQuery({ query: FEED_QUERY });
+
+        const votedLink = data.feed.links.find(link => link.id == linkId);
+        votedLink.votes = createdVote.link.votes;
+
+        store.writeQuery({ query: FEED_QUERY, data });
+    };
+
     return (
         <div>
-            {data.feed.links.map(link => (
-                <Link key={link.id} link={link} />
+            {data.feed.links.map((link, index) => (
+                <Link
+                    key={link.id}
+                    link={link}
+                    index={index}
+                    updateStoreAfterVote={_updateCacheAfterVote}
+                />
             ))}
         </div>
     );

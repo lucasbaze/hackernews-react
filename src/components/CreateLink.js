@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
-const CreateLink = () => {
+const CreateLink = ({ history }) => {
     const [values, setValues] = useState({});
 
     const POST_MUTATION = gql`
@@ -28,6 +28,7 @@ const CreateLink = () => {
         postLink({
             variables: { ...values },
         });
+        history.push('/');
     };
 
     console.log(data);
