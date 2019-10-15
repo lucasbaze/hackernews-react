@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { FEED_QUERY } from './LinkList';
 
 const CreateLink = ({ history }) => {
     const [values, setValues] = useState({});
@@ -21,11 +22,26 @@ const CreateLink = ({ history }) => {
         console.log(values);
     };
 
-    const [postLink, { data }] = useMutation(POST_MUTATION);
+    const [postLink, { data }] = useMutation(POST_MUTATION, {
+        update(
+            store,
+            {
+                data: { createLink },
+            }
+        ) {
+            console.log(store);
+            const data = store.readQuery({ query: FEED_QUERY });
+            data.feed.links.unshift(createLink);
+            store.writeQuery({
+                query: FEED_QUERY,
+                data,
+            });
+        },
+    });
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log(values);
-        postLink({
+        await postLink({
             variables: { ...values },
         });
         history.push('/');

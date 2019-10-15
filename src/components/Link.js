@@ -31,7 +31,7 @@ const Link = ({ link, index, updateStoreAfterVote }) => {
                 data: { vote },
             }
         ) {
-            console.log(store, data);
+            console.log(store);
             updateStoreAfterVote(store, vote, link.id);
         },
     });

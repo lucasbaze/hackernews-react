@@ -1,32 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from './Link';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-const LinkList = () => {
-    const FEED_QUERY = gql`
-        query {
-            feed {
-                links {
+export const FEED_QUERY = gql`
+    query {
+        feed {
+            links {
+                id
+                url
+                description
+                createdAt
+                postedBy {
                     id
-                    url
-                    description
-                    createdAt
-                    postedBy {
+                    name
+                }
+                votes {
+                    id
+                    user {
                         id
-                        name
-                    }
-                    votes {
-                        id
-                        user {
-                            id
-                        }
                     }
                 }
             }
         }
-    `;
+    }
+`;
 
+const LinkList = () => {
     const { loading, error, data } = useQuery(FEED_QUERY);
 
     if (loading) return <div>Fetching...</div>;
