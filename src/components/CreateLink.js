@@ -39,9 +39,9 @@ const CreateLink = ({ history }) => {
         },
     });
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
         console.log(values);
-        await postLink({
+        postLink({
             variables: { ...values },
         });
         history.push('/');
